@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/infrastructure/db/prisma'
 
 export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || (process.env.DEMO_MODE === 'true' ? 'demo-secret-key-for-development-only' : undefined),
   session: {
     strategy: 'jwt',
   },
@@ -21,6 +21,18 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Contraseña', type: 'password' },
       },
       async authorize(credentials) {
+        if (process.env.DEMO_MODE === 'true') {
+          // En modo demo, acepta cualquier email/password y devuelve usuario mock
+          if (credentials?.email && credentials?.password) {
+            return {
+              id: 'demo-user-id',
+              email: credentials.email,
+              name: 'Usuario Demo',
+            }
+          }
+          return null
+        }
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Email y contraseña son requeridos')
         }
