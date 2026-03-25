@@ -9,9 +9,10 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  // En modo demo, no requerir sesión
+  let session = null
+
   if (process.env.DEMO_MODE !== 'true') {
-    const session = await getServerSession(authOptions)
+    session = await getServerSession(authOptions)
 
     if (!session) {
       redirect('/login')
@@ -25,8 +26,8 @@ export default async function DashboardLayout({
     <div className="flex min-h-screen bg-gray-50">
       {/* Left sidebar */}
       <DashboardNav
-        userEmail={process.env.DEMO_MODE === 'true' ? 'demo@usuario.com' : (session?.user?.email ?? '')}
-        userName={process.env.DEMO_MODE === 'true' ? 'Usuario Demo' : session?.user?.name}
+        userEmail={process.env.DEMO_MODE === 'true' ? 'demo@usuario.com' : session?.user?.email ?? ''}
+        userName={process.env.DEMO_MODE === 'true' ? 'Usuario Demo' : session?.user?.name ?? ''}
         unreadChats={unreadChats}
       />
 
