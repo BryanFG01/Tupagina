@@ -1,6 +1,5 @@
-import { notFound } from 'next/navigation'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/infrastructure/auth/auth-options'
+import { notFound, redirect } from 'next/navigation'
+import { safeGetSession } from '@/infrastructure/auth/auth-options'
 import { getLandingForEditor } from '@/services/landing/get-landings'
 import { getDashboardProducts } from '@/services/store/product.service'
 import { ProductManager } from '@/components/store/ProductManager'
@@ -10,8 +9,9 @@ type Props = { params: Promise<{ id: string }> }
 
 export default async function ProductosPage({ params }: Props) {
   const { id } = await params
-  const session = await getServerSession(authOptions)
-  const userId = session!.user!.id as string
+  const session = await safeGetSession()
+  if (!session?.user?.id) redirect('/login')
+  const userId = session.user.id as string
 
   let landing
   try {

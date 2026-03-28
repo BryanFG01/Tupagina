@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// DEMO: SQLite (sin instalación). Cambiar a postgresql en producción.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  landings LandingPage[]
+  payments Payment[]
+
+  @@map("users")
+}
+
+model LandingPage {
+  id              String   @id @default(cuid())
+  userId          String
+  title           String
+  slug            String   @unique
+  description     String?
+  blocks          String   @default("[]")
+  published       Boolean  @default(false)
+  chatWebhookUrl  String?  // n8n webhook URL for chat notifications
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments     Payment[]
+  products     Product[]
+  orders       Order[]
+  chatSessions ChatSession[]
+
+  @@map("landing_pages")
+}
+
+model ChatSession {
+  id          String    @id @default(cuid())
+  landingId   String
+  visitorName String?
+  visitorId   String    // anonymous ID stored in visitor's localStorage
+  status      String    @default("OPEN") // OPEN | CLOSED
+  unreadCount Int       @default(0)      // messages from visitor not yet read by admin
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  landing  LandingPage   @relation(fields: [landingId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  sender    String   // "visitor" | "admin"
+  text      String
+  createdAt DateTime @default(now())
+
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  landingId   String
+  name        String
+  description String?
+  imageUrl    String?
+  price       Int      // centavos (ej: 1000 = $10.00)
+  comparePrice Int?    // precio original tachado (para "Oferta")
+  stock       Int      @default(-1) // -1 = ilimitado
+  active      Boolean  @default(true)
+  category    String?  // categoría para tabs de filtrado
+  badge       String?  // "Nuevo" | "Oferta" | "Popular" | personalizado
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  landing    LandingPage @relation(fields: [landingId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  @@map("products")
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  landingId       String
+  buyerEmail      String?
+  buyerName       String?
+  buyerPhone      String?
+  shippingAddress String?  // JSON: { street, city, state, zipCode, country }
+  totalAmount     Int      // centavos
+  currency        String   @default("usd")
+  status          String   @default("PENDING") // PENDING | PAID | CANCELLED
+  paymentProvider String   @default("stripe")  // stripe | mercadopago
+  stripeSessionId String?
+  mpPaymentId     String?  // Mercado Pago payment id
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  landing LandingPage @relation(fields: [landingId], references: [id])
+  items   OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  name      String // snapshot del nombre en momento de compra
+  unitPrice Int    // snapshot del precio en momento de compra
+  quantity  Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Payment {
+  id         String   @id @default(cuid())
+  landingId  String
+  userId     String
+  amount     Int
+  currency   String   @default("usd")
+  status     String   @default("PENDING")
+  provider   String
+  externalId String?
+  buyerEmail String?
+  buyerName  String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  landing LandingPage @relation(fields: [landingId], references: [id])
+  user    User        @relation(fields: [userId], references: [id])
+
+  @@map("payments")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  orderId    String?  // opcional: para verificar que realmente compró
+  rating     Int      // 1-5
+  comment    String?
+  buyerName  String
+  buyerEmail String?
+  approved   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}

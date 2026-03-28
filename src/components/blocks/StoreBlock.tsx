@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { StoreContent, BlockStyle } from '@/domain/landing/block.types'
 import type { Product } from '@/domain/store/store.types'
 import { useCartOptional } from '@/components/store/StoreProvider'
@@ -72,6 +72,29 @@ export function StoreBlock({ content, previewMode = false, style }: Props) {
 
   const [search,       setSearch]       = useState('')
   const [activeTab,    setActiveTab]    = useState('Todos')
+
+  // ── Deep-link por hash: #frutas-y-verduras → filtra esa categoría ──────────
+  useEffect(() => {
+    function slugify(str: string) {
+      return str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    }
+    function applyHash() {
+      const hash = window.location.hash.slice(1)
+      if (!hash || hash === 'productos') return
+      if (hash === 'todos') { setActiveTab('Todos'); return }
+      const cats = [...new Set(products.map(p => p.category).filter(Boolean))] as string[]
+      const match = cats.find(cat => slugify(cat) === hash)
+      if (match) {
+        setActiveTab(match)
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+    applyHash()
+    window.addEventListener('hashchange', applyHash)
+    return () => window.removeEventListener('hashchange', applyHash)
+  }, [products])
   const [sortBy,       setSortBy]       = useState<SortValue>('default')
   const [layout,       setLayout]       = useState<'grid' | 'list'>(content.layout ?? 'grid')
   const [priceMin,     setPriceMin]     = useState('')
@@ -128,7 +151,7 @@ export function StoreBlock({ content, previewMode = false, style }: Props) {
   }, [products, activeTab, search, sortBy, priceMin, priceMax])
 
   const formatted = (cents: number) =>
-    new Intl.NumberFormat('es-MX', { style: 'currency', currency: content.currency.toUpperCase() }).format(cents / 100)
+    new Intl.NumberFormat('es-MX', { style: 'currency', currency: (content.currency ?? 'usd').toUpperCase() }).format(cents / 100)
 
   const colClass =
     content.columns === 2 ? 'grid-cols-1 sm:grid-cols-2' :
@@ -519,9 +542,9 @@ export function StoreBlock({ content, previewMode = false, style }: Props) {
 
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">{content.title}</h2>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">{content.title}</h2>
           {content.subtitle && (
-            <p className="text-gray-500 mt-3 text-base max-w-xl mx-auto leading-relaxed">{content.subtitle}</p>
+            <p className="mt-3 text-base max-w-xl mx-auto leading-relaxed opacity-60">{content.subtitle}</p>
           )}
         </div>
 

@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma:*)",
+      "Bash(ls \"c:/Users/pcc/Desktop/TuNegocio/.env\"*)",
+      "Bash(pg_isready)",
+      "Bash(psql --version)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(npm install:*)",
+      "Bash(pnpm add:*)",
+      "Bash(mkdir -p \"c:/Users/pcc/Desktop/TuNegocio/src/app/\\(dashboard\\)/dashboard/landings/[id]/productos\")",
+      "Bash(mkdir -p \"c:/Users/pcc/Desktop/TuNegocio/src/app/\\(dashboard\\)/dashboard/landings/[id]/pedidos\")",
+      "Bash(npx tsc:*)",
+      "Bash(npx next:*)",
+      "Bash(curl -s http://localhost:3001/demo/dashboard)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3000)",
+      "Bash(findstr LISTENING)",
+      "Bash(cmd /c \"netstat -ano | findstr :3000 | findstr LISTENING\")",
+      "Bash(ls -la /c/Users/pcc/Desktop/TuNegocio/src/app/page.tsx /c/Users/pcc/Desktop/TuNegocio/src/app/\\\\\\(auth\\\\\\)/login/page.tsx /c/Users/pcc/Desktop/TuNegocio/src/components/editor/LandingEditor.tsx)",
+      "Bash(node -e \":*)",
+      "Bash(find /c/Users/pcc/Desktop/TuNegocio -type f -name *producto* -o -name *pedido*)",
+      "Bash(find /c/Users/pcc/Desktop/TuNegocio/src -type f -name *StoreProvider* -o -name *store.provider*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsx -e \":*)",
+      "Bash(ls -la /c/Users/pcc/Desktop/TuNegocio/src/app/\\\\\\(dashboard\\\\\\)/dashboard/)",
+      "Bash(ls -la /c/Users/pcc/Desktop/TuNegocio/src/app/\\\\\\(auth\\\\\\)/)",
+      "Bash(ls -la /c/Users/pcc/Desktop/TuNegocio/src/app/\\\\\\(dashboard\\\\\\)/dashboard/landings/*/)",
+      "Bash(ls -la /c/Users/pcc/Desktop/TuNegocio/src/components/blocks/*.tsx)",
+      "Bash(ls -1 /c/Users/pcc/Desktop/TuNegocio/src/components/blocks/*.tsx)",
+      "Bash(ls -1 /c/Users/pcc/Desktop/TuNegocio/src/components/editor/blocks/*.tsx)",
+      "Bash(wc -l /c/Users/pcc/Desktop/TuNegocio/src/domain/landing/*.ts)",
+      "Bash(npx ts-node --compiler-options '{\"\"\"\"module\"\"\"\":\"\"\"\"CommonJS\"\"\"\"}' -e \":*)"
+    ]
+  }
+}

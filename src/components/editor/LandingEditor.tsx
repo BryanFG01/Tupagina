@@ -176,7 +176,7 @@ const BLOCK_META: Record<BlockType, BlockMeta> = {
   'floating-buttons': { label: 'Botones flotantes',  icon: <IconBotonesFlotantes />, desc: 'WhatsApp, chat, teléfono', color: 'bg-teal-50   text-teal-600   border-teal-200'   },
   footer:             { label: 'Pie de página',      icon: <IconFooter />,           desc: 'Redes sociales + links',   color: 'bg-slate-50  text-slate-600  border-slate-200'  },
   faq:                { label: 'FAQ / Acordeón',     icon: <IconFaq />,              desc: 'Preguntas frecuentes',     color: 'bg-orange-50 text-orange-600 border-orange-200' },
-  navbar:             { label: 'Navegación',         icon: <IconNavbar />,           desc: 'Menú con dropdowns',       color: 'bg-cyan-50   text-cyan-600   border-cyan-200',   hidden: true },
+  navbar:             { label: 'Navegación',         icon: <IconNavbar />,           desc: 'Menú con dropdowns',       color: 'bg-cyan-50   text-cyan-600   border-cyan-200'   },
   'brands-banner':    { label: 'Ticker de marcas',  icon: <IconMarcas />,           desc: 'Logos animados / brands',  color: 'bg-pink-50   text-pink-600   border-pink-200'    },
   gallery:            { label: 'Galería de fotos',  icon: <IconGaleria />,          desc: 'Grid, mosaico, editorial', color: 'bg-rose-50   text-rose-600   border-rose-200'    },
   stats:              { label: 'Estadísticas',      icon: <IconStats />,            desc: 'Contadores animados',      color: 'bg-emerald-50 text-emerald-600 border-emerald-200' },
@@ -201,6 +201,7 @@ export function LandingEditor({ landing }: Props) {
   const [rightTab, setRightTab]       = useState<'content' | 'style'>('content')
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop')
+  const [blockSearch, setBlockSearch] = useState('')
 
   const selectedBlock = blocks.find(b => b.id === selectedId) ?? null
   const dragActiveBlock = blocks.find(b => b.id === dragActiveId) ?? null
@@ -389,27 +390,66 @@ export function LandingEditor({ landing }: Props) {
           {/* Section title */}
           <div className="px-4 pt-5 pb-3">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Biblioteca de bloques</p>
-            <p className="text-xs text-gray-500 mt-1">Haz click para agregar a tu página</p>
+          </div>
+
+          {/* Search */}
+          <div className="px-3 pb-3">
+            <div className="relative">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                type="text"
+                value={blockSearch}
+                onChange={e => setBlockSearch(e.target.value)}
+                placeholder="Buscar bloque…"
+                className="w-full pl-8 pr-8 py-2 text-xs rounded-lg border border-gray-200 bg-gray-50 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition-all"
+              />
+              {blockSearch && (
+                <button
+                  onClick={() => setBlockSearch('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="w-3 h-3">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Block cards */}
           <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-1.5">
-            {(Object.entries(BLOCK_META) as [BlockType, BlockMeta][]).filter(([, meta]) => !meta.hidden).map(([type, meta]) => (
-              <button
-                key={type}
-                onClick={() => addBlock(type)}
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-gray-100 bg-white hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-sm transition-all group text-left"
-              >
-                <span className={`w-9 h-9 rounded-lg border flex items-center justify-center text-base flex-shrink-0 ${meta.color}`}>
-                  {meta.icon}
-                </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-700 group-hover:text-indigo-700 leading-tight">{meta.label}</p>
-                  <p className="text-[11px] text-gray-400 truncate">{meta.desc}</p>
-                </div>
-                <span className="ml-auto text-gray-300 group-hover:text-indigo-400 text-lg leading-none">+</span>
-              </button>
-            ))}
+            {(() => {
+              const q = blockSearch.toLowerCase().trim()
+              const filtered = (Object.entries(BLOCK_META) as [BlockType, BlockMeta][])
+                .filter(([, meta]) => !meta.hidden)
+                .filter(([, meta]) => !q || meta.label.toLowerCase().includes(q) || meta.desc.toLowerCase().includes(q))
+              if (filtered.length === 0) {
+                return (
+                  <div className="text-center py-8 text-gray-400">
+                    <p className="text-xs">Sin resultados para</p>
+                    <p className="text-xs font-semibold mt-0.5">"{blockSearch}"</p>
+                  </div>
+                )
+              }
+              return filtered.map(([type, meta]) => (
+                <button
+                  key={type}
+                  onClick={() => addBlock(type)}
+                  className="w-full flex items-center gap-3 px-3 py-3 rounded-xl border border-gray-100 bg-white hover:border-indigo-300 hover:bg-indigo-50 hover:shadow-sm transition-all group text-left"
+                >
+                  <span className={`w-9 h-9 rounded-lg border flex items-center justify-center text-base flex-shrink-0 ${meta.color}`}>
+                    {meta.icon}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-700 group-hover:text-indigo-700 leading-tight">{meta.label}</p>
+                    <p className="text-[11px] text-gray-400 truncate">{meta.desc}</p>
+                  </div>
+                  <span className="ml-auto text-gray-300 group-hover:text-indigo-400 text-lg leading-none">+</span>
+                </button>
+              ))
+            })()}
           </div>
 
           {/* Publish CTA */}
