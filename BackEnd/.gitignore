@@ -1,0 +1,30 @@
+## .NET
+*.user
+*.suo
+.vs/
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+
+## Rider
+.idea/
+
+## VSCode
+.vscode/
+
+## Secrets (NUNCA subir al repositorio)
+appsettings.Development.json
+**/secrets.json
+
+## NuGet
+*.nupkg
+.nuget/
+
+## Logs
+*.log
+
+## OS
+.DS_Store
+Thumbs.db
