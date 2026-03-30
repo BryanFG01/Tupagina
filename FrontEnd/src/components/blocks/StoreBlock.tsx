@@ -9,12 +9,12 @@ import { bsCls, bsStyle } from './blockStyle'
 // ─── Demo productos ───────────────────────────────────────────────────────────
 
 const DEMO_PRODUCTS: Product[] = [
-  { id: 'd1', landingId: 'demo', name: 'Camiseta Clásica',   category: 'Ropa',        description: 'Algodón 100%, corte regular. Disponible en varios colores.',               imageUrl: null, price: 2900,  comparePrice: null, stock: -1, badge: 'Nuevo',     badgeShape: 'pill',       badgeSize: 'md', active: true, createdAt: new Date(), updatedAt: new Date() },
-  { id: 'd2', landingId: 'demo', name: 'Pantalón Cargo',     category: 'Ropa',        description: 'Diseño moderno con múltiples bolsillos. Comodidad todo el día.',            imageUrl: null, price: 4900,  comparePrice: 6900, stock:  8, badge: 'Oferta',    badgeShape: 'starburst',  badgeSize: 'lg', active: true, createdAt: new Date(), updatedAt: new Date() },
-  { id: 'd3', landingId: 'demo', name: 'Zapatillas Urban',   category: 'Calzado',     description: 'Suela de goma antideslizante. Estilo urbano para cualquier ocasión.',       imageUrl: null, price: 9900,  comparePrice: null, stock:  3, badge: 'Popular',   badgeShape: 'square',     badgeSize: 'md', active: true, createdAt: new Date(), updatedAt: new Date() },
-  { id: 'd4', landingId: 'demo', name: 'Gorra Streetwear',   category: 'Accesorios',  description: 'Cap ajustable. Diseño exclusivo con bordado en relieve.',                   imageUrl: null, price: 1900,  comparePrice: null, stock: -1, badge: null,        badgeShape: null,         badgeSize: null, active: true, createdAt: new Date(), updatedAt: new Date() },
-  { id: 'd5', landingId: 'demo', name: 'Hoodie Oversized',   category: 'Ropa',        description: 'Sudadera con capucha. Tela pesada premium. Fit oversized.',                 imageUrl: null, price: 6900,  comparePrice: 8500, stock: 12, badge: 'Oferta',    badgeShape: 'pill',       badgeSize: 'sm', active: true, createdAt: new Date(), updatedAt: new Date() },
-  { id: 'd6', landingId: 'demo', name: 'Bolso Tote',         category: 'Accesorios',  description: 'Lona resistente, asas reforzadas. Ideal para el día a día.',                imageUrl: null, price: 3500,  comparePrice: null, stock:  0, badge: null,        badgeShape: null,         badgeSize: null, active: true, createdAt: new Date(), updatedAt: new Date() },
+  { id: 'd1', landingId: 'demo', name: 'Camiseta Clásica',   category: 'Ropa',        description: 'Algodón 100%, corte regular. Disponible en varios colores.',               imageUrl: null, price: 2900, currency: 'USD', comparePrice: null, stock: -1, badge: 'Nuevo',     badgeShape: 'pill',       badgeSize: 'md', badgeColor: null, active: true, createdAt: new Date(), updatedAt: new Date() },
+  { id: 'd2', landingId: 'demo', name: 'Pantalón Cargo',     category: 'Ropa',        description: 'Diseño moderno con múltiples bolsillos. Comodidad todo el día.',            imageUrl: null, price: 4900, currency: 'USD', comparePrice: 6900, stock:  8, badge: 'Oferta',    badgeShape: 'starburst',  badgeSize: 'lg', badgeColor: null, active: true, createdAt: new Date(), updatedAt: new Date() },
+  { id: 'd3', landingId: 'demo', name: 'Zapatillas Urban',   category: 'Calzado',     description: 'Suela de goma antideslizante. Estilo urbano para cualquier ocasión.',       imageUrl: null, price: 9900, currency: 'USD', comparePrice: null, stock:  3, badge: 'Popular',   badgeShape: 'square',     badgeSize: 'md', badgeColor: null, active: true, createdAt: new Date(), updatedAt: new Date() },
+  { id: 'd4', landingId: 'demo', name: 'Gorra Streetwear',   category: 'Accesorios',  description: 'Cap ajustable. Diseño exclusivo con bordado en relieve.',                   imageUrl: null, price: 1900, currency: 'USD', comparePrice: null, stock: -1, badge: null,        badgeShape: null,         badgeSize: null, badgeColor: null, active: true, createdAt: new Date(), updatedAt: new Date() },
+  { id: 'd5', landingId: 'demo', name: 'Hoodie Oversized',   category: 'Ropa',        description: 'Sudadera con capucha. Tela pesada premium. Fit oversized.',                 imageUrl: null, price: 6900, currency: 'USD', comparePrice: 8500, stock: 12, badge: 'Oferta',    badgeShape: 'pill',       badgeSize: 'sm', badgeColor: null, active: true, createdAt: new Date(), updatedAt: new Date() },
+  { id: 'd6', landingId: 'demo', name: 'Bolso Tote',         category: 'Accesorios',  description: 'Lona resistente, asas reforzadas. Ideal para el día a día.',                imageUrl: null, price: 3500, currency: 'USD', comparePrice: null, stock:  0, badge: null,        badgeShape: null,         badgeSize: null, badgeColor: null, active: true, createdAt: new Date(), updatedAt: new Date() },
 ]
 
 // ─── Iconos SVG ───────────────────────────────────────────────────────────────
@@ -600,20 +600,26 @@ const _STARBURST_PTS = (() => {
   for (let i = 0; i < 20; i++) {
     const angle = (Math.PI * i) / 10 - Math.PI / 2
     const r = i % 2 === 0 ? 48 : 34
-    pts.push(`${50 + r * Math.cos(angle)},${50 + r * Math.sin(angle)}`)
+    const x = Number((50 + r * Math.cos(angle)).toFixed(4))
+    const y = Number((50 + r * Math.sin(angle)).toFixed(4))
+    pts.push(`${x},${y}`)
   }
   return pts.join(' ')
 })()
 
 const BADGE_SIZE_PX = { sm: 32, md: 44, lg: 58 }
 
-function Badge({ text, presets, shape, size }: {
+function Badge({ text, presets, shape, size, badgeColor }: {
   text: string
   presets?: StoreBadgePreset[]
   shape?: string | null
   size?: string | null
+  badgeColor?: string | null
 }) {
-  const { bg, color } = resolveBadge(text, presets)
+  const resolved = resolveBadge(text, presets)
+  const isCustom = !presets?.some(p => p.text === text)
+  const bg = (isCustom && badgeColor) ? badgeColor : resolved.bg
+  const color = '#ffffff'
   const resolvedShape = shape ?? 'pill'
   const px = BADGE_SIZE_PX[(size ?? 'md') as keyof typeof BADGE_SIZE_PX] ?? BADGE_SIZE_PX.md
   const textLen = text.length
@@ -698,7 +704,7 @@ function ProductCard({ product, buttonText, formatted, onAdd, onRemoveOne, onVie
           </div>
         )}
 
-        {product.badge && <Badge text={product.badge} presets={badgePresets} shape={product.badgeShape} size={product.badgeSize} />}
+        {product.badge && <Badge text={product.badge} presets={badgePresets} shape={product.badgeShape} size={product.badgeSize} badgeColor={product.badgeColor} />}
 
         {discount && (
           <span className="absolute top-2.5 right-2.5 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm">
@@ -835,7 +841,7 @@ function ProductListRow({ product, buttonText, formatted, onAdd, onRemoveOne, on
             </svg>
           </div>
         )}
-        {product.badge && <Badge text={product.badge} presets={badgePresets} shape={product.badgeShape} size={product.badgeSize ?? 'sm'} />}
+        {product.badge && <Badge text={product.badge} presets={badgePresets} shape={product.badgeShape} size={product.badgeSize ?? 'sm'} badgeColor={product.badgeColor} />}
         {outOfStock && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
             <span className="text-[10px] font-bold text-gray-500">Agotado</span>

@@ -14,17 +14,17 @@ import type { StoreBadgePreset } from '@/domain/landing/block.types'
 
 type ProductExt = Product & { landingTitle: string }
 
-function fmtMoney(cents: number) {
-  return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(cents / 100)
+function fmtMoney(cents: number, currency: string = 'USD') {
+  return new Intl.NumberFormat('es-MX', { style: 'currency', currency, minimumFractionDigits: 2 }).format(cents / 100)
 }
 
 type ProductForm = {
   landingId: string; name: string; description: string
-  price: string; comparePrice: string; stock: string
-  category: string; badge: string; badgeShape: string; badgeSize: string; active: boolean
+  price: string; currency: string; comparePrice: string; stock: string
+  category: string; badge: string; badgeShape: string; badgeSize: string; badgeColor: string; active: boolean
 }
 function blankForm(landingId = ''): ProductForm {
-  return { landingId, name: '', description: '', price: '', comparePrice: '', stock: '', category: '', badge: '', badgeShape: 'pill', badgeSize: 'md', active: true }
+  return { landingId, name: '', description: '', price: '', currency: 'USD', comparePrice: '', stock: '', category: '', badge: '', badgeShape: 'pill', badgeSize: 'md', badgeColor: '#6b7280', active: true }
 }
 function productToForm(p: ProductExt): ProductForm {
   return {
@@ -32,12 +32,14 @@ function productToForm(p: ProductExt): ProductForm {
     name:         p.name,
     description:  p.description ?? '',
     price:        String(p.price / 100),
+    currency:     p.currency ?? 'USD',
     comparePrice: p.comparePrice != null ? String(p.comparePrice / 100) : '',
     stock:        p.stock === -1 ? '' : String(p.stock),
     category:     p.category ?? '',
     badge:        p.badge ?? '',
     badgeShape:   p.badgeShape ?? 'pill',
     badgeSize:    p.badgeSize  ?? 'md',
+    badgeColor:   p.badgeColor ?? '#6b7280',
     active:       p.active,
   }
 }
@@ -140,11 +142,13 @@ export default function ProductosPage() {
     const res = await createProductAction(form.landingId, {
       name: form.name, description: form.description || undefined,
       price: Math.round(parseFloat(form.price) * 100),
+      currency: form.currency,
       comparePrice: form.comparePrice ? Math.round(parseFloat(form.comparePrice) * 100) : undefined,
       stock: form.stock ? parseInt(form.stock) : -1,
       category: form.category || undefined, badge: form.badge || undefined,
       badgeShape: form.badge ? form.badgeShape : undefined,
       badgeSize:  form.badge ? form.badgeSize  : undefined,
+      badgeColor: form.badge ? form.badgeColor : undefined,
       active: form.active,
     })
     setSaving(false)
@@ -161,11 +165,13 @@ export default function ProductosPage() {
     const res = await updateProductAction(editing.id, editing.landingId, {
       name: form.name, description: form.description || undefined,
       price: Math.round(parseFloat(form.price) * 100),
+      currency: form.currency,
       comparePrice: form.comparePrice ? Math.round(parseFloat(form.comparePrice) * 100) : undefined,
       stock: form.stock ? parseInt(form.stock) : -1,
       category: form.category || undefined, badge: form.badge || undefined,
       badgeShape: form.badge ? form.badgeShape : undefined,
       badgeSize:  form.badge ? form.badgeSize  : undefined,
+      badgeColor: form.badge ? form.badgeColor : undefined,
       active: form.active,
     })
     setSaving(false)
@@ -232,10 +238,10 @@ export default function ProductosPage() {
                 className={`${inp} resize-none`} rows={3} placeholder="Descripción del producto…" />
             </div>
 
-            {/* Precios */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Precios y Moneda */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className={lbl}>Precio (USD) *</label>
+                <label className={lbl}>Precio *</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">$</span>
                   <input type="number" min="0" step="0.01" value={form.price}
@@ -244,7 +250,19 @@ export default function ProductosPage() {
                 </div>
               </div>
               <div>
-                <label className={lbl}>Precio original (tachado)</label>
+                <label className={lbl}>Moneda *</label>
+                <select value={form.currency} onChange={e => setForm(f => ({ ...f, currency: e.target.value }))} className={inp}>
+                  <option value="USD">USD - Dólares</option>
+                  <option value="EUR">EUR - Euros</option>
+                  <option value="COP">COP - Pesos Col.</option>
+                  <option value="MXN">MXN - Pesos Mex.</option>
+                  <option value="CLP">CLP - Pesos Chi.</option>
+                  <option value="ARS">ARS - Pesos Arg.</option>
+                  <option value="PEN">PEN - Soles Per.</option>
+                </select>
+              </div>
+              <div>
+                <label className={lbl}>Original (tachado)</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">$</span>
                   <input type="number" min="0" step="0.01" value={form.comparePrice}
@@ -289,7 +307,7 @@ export default function ProductosPage() {
                   const active = form.badge === p.text
                   return (
                     <button key={p.id} type="button"
-                      onClick={() => setForm(f => ({ ...f, badge: active ? '' : p.text }))}
+                      onClick={() => setForm(f => ({ ...f, badge: active ? '' : p.text, badgeColor: active ? '#6b7280' : p.bg }))}
                       className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                         active
                           ? 'ring-2 ring-offset-2 ring-gray-500 scale-110 shadow-md'
@@ -311,9 +329,10 @@ export default function ProductosPage() {
                   className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                 />
                 {form.badge && (() => {
-                  const preset = BADGE_PRESETS.find(p => p.text === form.badge)
-                  const bg  = preset?.bg    ?? '#6b7280'
-                  const clr = preset?.color ?? '#ffffff'
+                  const isPreset = BADGE_PRESETS.some(p => p.text === form.badge)
+                  const presetBg = BADGE_PRESETS.find(p => p.text === form.badge)?.bg
+                  const bg  = isPreset ? presetBg : form.badgeColor
+                  const clr = '#ffffff'
                   return (
                     <span className="px-3 py-1.5 rounded-full text-xs font-bold flex-shrink-0 shadow-sm"
                       style={{ backgroundColor: bg, color: clr }}>
@@ -325,8 +344,8 @@ export default function ProductosPage() {
 
               {/* Forma y Tamaño — solo si hay etiqueta */}
               {form.badge && (
-                <div className="grid grid-cols-2 gap-3 pt-1 border-t border-gray-200">
-                  <div className="space-y-1.5">
+                <div className="flex gap-4 pt-1 border-t border-gray-200">
+                  <div className="space-y-1.5 flex-[2]">
                     <p className="text-[11px] font-semibold text-gray-600">Forma</p>
                     <div className="flex gap-1.5">
                       {([
@@ -349,7 +368,7 @@ export default function ProductosPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 flex-[1.5]">
                     <p className="text-[11px] font-semibold text-gray-600">Tamaño</p>
                     <div className="flex gap-1.5">
                       {([
@@ -368,6 +387,17 @@ export default function ProductosPage() {
                           {opt.label}
                         </button>
                       ))}
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 flex flex-col items-center">
+                    <p className="text-[11px] font-semibold text-gray-600 leading-none">Color</p>
+                    <div className="h-full flex items-center justify-center pt-1">
+                      <input
+                        type="color"
+                        value={form.badgeColor || '#6b7280'}
+                        onChange={e => setForm(f => ({ ...f, badgeColor: e.target.value }))}
+                        className="w-7 h-7 p-0 border-0 rounded-full cursor-pointer overflow-hidden shadow-sm"
+                      />
                     </div>
                   </div>
                 </div>
@@ -496,9 +526,9 @@ export default function ProductosPage() {
 
                 {/* Price */}
                 <div>
-                  <p className="text-sm font-bold text-gray-900">{fmtMoney(p.price)}</p>
+                  <p className="text-sm font-bold text-gray-900">{fmtMoney(p.price, p.currency || 'USD')}</p>
                   {p.comparePrice && (
-                    <p className="text-[11px] text-gray-400 line-through">{fmtMoney(p.comparePrice)}</p>
+                    <p className="text-[11px] text-gray-400 line-through">{fmtMoney(p.comparePrice, p.currency || 'USD')}</p>
                   )}
                 </div>
 

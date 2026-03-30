@@ -47,6 +47,7 @@ import { StoreBannerBlockEditor } from './blocks/StoreBannerBlockEditor'
 import { StoreBlockEditor } from './blocks/StoreBlockEditor'
 import { TestimonialsBlockEditor } from './blocks/TestimonialsBlockEditor'
 import { nanoid } from './nanoid'
+import type { LandingPageDef, NavbarContent } from '@/domain/landing/block.types'
 
 // ─── Metadata de bloques ──────────────────────────────────────────────────────
 
@@ -429,7 +430,7 @@ const BLOCK_META: Record<BlockType, BlockMeta> = {
     icon: <IconSpinner />,
     desc: 'Pantalla de carga custom',
     color: 'bg-purple-50 text-purple-600 border-purple-200'
-  }
+  },
 }
 
 // ─── Block Library Card ───────────────────────────────────────────────────────
@@ -493,9 +494,49 @@ export function LandingEditor({ landing }: Props) {
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop')
   const [blockSearch, setBlockSearch] = useState('')
+  const [leftTab, setLeftTab] = useState<'bloques' | 'vistas'>('bloques')
+  const [activePage, setActivePage] = useState<string>('')
 
   const selectedBlock = blocks.find((b) => b.id === selectedId) ?? null
   const dragActiveBlock = blocks.find((b) => b.id === dragActiveId) ?? null
+
+  // ── Multi-page (derivado del Navbar) ─────────────────────────────────────
+  // Las vistas se definen a partir de los links del Navbar que usan ?p=
+  const GLOBAL_TYPES = new Set(['navbar', 'footer', 'floating-buttons', 'loading-spinner'])
+
+  const pages: LandingPageDef[] = (() => {
+    const navbar = blocks.find((b) => b.type === 'navbar')
+    if (!navbar) return []
+    const items = (navbar.content as NavbarContent).items ?? []
+    const seen = new Set<string>()
+    const result: LandingPageDef[] = [
+      { id: 'home', label: 'Inicio', path: '', icon: '🏠', isHome: true },
+    ]
+    const extract = (url: string, label: string, id: string) => {
+      const m = url.match(/[?&]p=([^&\s#]+)/)
+      if (m && m[1] && !seen.has(m[1])) {
+        seen.add(m[1])
+        result.push({ id, label, path: m[1], icon: '📄' })
+      }
+    }
+    for (const item of items) {
+      extract(item.url, item.label, item.id)
+      for (const dd of item.dropdown ?? []) extract(dd.url, dd.label, dd.id)
+    }
+    return result.length > 1 ? result : []
+  })()
+
+  const hasMultiPage = pages.length > 0
+
+  // Bloques del canvas (filtrados por vista activa en el panel "Vistas")
+  const canvasBlocks = (hasMultiPage && leftTab === 'vistas')
+    ? blocks.filter((b) => {
+        if (!(b.type in BLOCK_META)) return false   // skip unknown types
+        if (GLOBAL_TYPES.has(b.type)) return true
+        const bpId = b.pageId
+        return !bpId || bpId === activePage
+      })
+    : blocks.filter((b) => b.type in BLOCK_META)   // skip unknown types
 
   // ── Drag & Drop ───────────────────────────────────────────────────────────
 
@@ -533,7 +574,8 @@ export function LandingEditor({ landing }: Props) {
       id: nanoid(),
       type,
       order: blocks.length,
-      content: JSON.parse(JSON.stringify(BLOCK_DEFAULTS[type]))
+      content: JSON.parse(JSON.stringify(BLOCK_DEFAULTS[type])),
+      ...(hasMultiPage && activePage && !GLOBAL_TYPES.has(type) ? { pageId: activePage } : {}),
     } as Block
     setBlocks((prev) => [...prev, block])
     setSelectedId(block.id)
@@ -692,59 +734,149 @@ export function LandingEditor({ landing }: Props) {
           className="w-[220px] bg-white border-r border-gray-200/60 flex flex-col flex-shrink-0"
           style={{ boxShadow: '2px 0 12px rgba(0,0,0,0.04)' }}
         >
-          {/* Header */}
-          <div className="px-4 pt-4 pb-3 border-b border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
-                Bloques
-              </p>
-              <span className="text-[10px] bg-indigo-100 text-indigo-600 font-bold px-2 py-0.5 rounded-full">
-                {blocks.length} en página
-              </span>
-            </div>
-            {/* Search */}
-            <div className="relative">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+          {/* Header — Tabs Bloques / Vistas */}
+          <div className="px-3 pt-3 pb-3 border-b border-gray-100">
+            <div className="flex bg-gray-100 rounded-xl p-1 gap-1 mb-2">
+              <button
+                onClick={() => setLeftTab('bloques')}
+                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all ${leftTab === 'bloques' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
               >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input
-                type="text"
-                value={blockSearch}
-                onChange={(e) => setBlockSearch(e.target.value)}
-                placeholder="Buscar bloque…"
-                className="w-full pl-8 pr-7 py-2 text-xs rounded-lg border border-gray-200 bg-gray-50/80 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 focus:bg-white transition-all"
-              />
-              {blockSearch && (
-                <button
-                  onClick={() => setBlockSearch('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center rounded-full bg-gray-300 hover:bg-gray-400 text-white transition-colors"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    className="w-2.5 h-2.5"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-              )}
+                Bloques
+              </button>
+              <button
+                onClick={() => setLeftTab('vistas')}
+                className={`flex-1 py-1.5 text-[11px] font-bold rounded-lg transition-all relative ${leftTab === 'vistas' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                Vistas
+                {hasMultiPage && (
+                  <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-indigo-500 rounded-full text-[8px] text-white flex items-center justify-center font-bold">
+                    {pages.length}
+                  </span>
+                )}
+              </button>
             </div>
+            {leftTab === 'bloques' && (
+            <>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                  Bloques
+                </p>
+                <span className="text-[10px] bg-indigo-100 text-indigo-600 font-bold px-2 py-0.5 rounded-full">
+                  {blocks.length} en página
+                </span>
+              </div>
+              {/* Search */}
+              <div className="relative">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input
+                  type="text"
+                  value={blockSearch}
+                  onChange={(e) => setBlockSearch(e.target.value)}
+                  placeholder="Buscar bloque…"
+                  className="w-full pl-8 pr-7 py-2 text-xs rounded-lg border border-gray-200 bg-gray-50/80 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 focus:bg-white transition-all"
+                />
+                {blockSearch && (
+                  <button
+                    onClick={() => setBlockSearch('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center rounded-full bg-gray-300 hover:bg-gray-400 text-white transition-colors"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      className="w-2.5 h-2.5"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </>
+            )}
           </div>
 
-          {/* Block list */}
+          {/* Block list OR Vistas panel */}
+          {leftTab === 'vistas' ? (
+            <div className="flex-1 overflow-y-auto pb-2 px-3 pt-3" style={{ scrollbarWidth: 'thin', scrollbarColor: '#e5e7eb transparent' }}>
+              {!hasMultiPage ? (
+                <div className="space-y-3">
+                  <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
+                    <p className="text-xs font-bold text-indigo-700 mb-1">¿Cómo crear vistas?</p>
+                    <p className="text-[11px] text-indigo-600 leading-relaxed">
+                      Agrega links en el bloque <strong>Navegación</strong> con el formato <code className="bg-indigo-100 px-1 rounded font-mono">?p=nombre</code>. Cada link define una vista.
+                    </p>
+                  </div>
+                  <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-1.5">
+                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Ejemplo</p>
+                    {[
+                      { label: 'Inicio', url: '/', note: 'vista principal' },
+                      { label: 'Tienda', url: '?p=tienda', note: 'segunda vista' },
+                      { label: 'Nosotros', url: '?p=nosotros', note: 'tercera vista' },
+                    ].map((ex) => (
+                      <div key={ex.url} className="flex items-center gap-2">
+                        <span className="text-[10px] font-semibold text-gray-600 w-16 truncate">{ex.label}</span>
+                        <code className="text-[10px] bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded font-mono flex-1 truncate">{ex.url}</code>
+                        <span className="text-[10px] text-gray-400">{ex.note}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => {
+                      const navbarId = blocks.find(b => b.type === 'navbar')?.id
+                      if (navbarId) setSelectedId(navbarId)
+                      setLeftTab('bloques')
+                    }}
+                    className="w-full py-2 border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-xl transition-colors"
+                  >
+                    {blocks.find(b => b.type === 'navbar') ? '→ Ir al bloque Navegación' : '+ Agregar bloque Navegación primero'}
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-[10px] text-gray-400 font-medium">Vista activa en el editor:</p>
+                  {pages.map((page) => (
+                    <button
+                      key={page.id}
+                      onClick={() => setActivePage(page.isHome ? '' : page.path)}
+                      className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border text-left transition-all ${
+                        (page.isHome ? '' : page.path) === activePage
+                          ? 'border-indigo-300 bg-indigo-50 text-indigo-700'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      <span className="text-base">{page.icon ?? '📄'}</span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-semibold truncate">{page.label}</p>
+                        <p className="text-[10px] text-gray-400 font-mono truncate">
+                          {page.isHome ? '(principal)' : `?p=${page.path}`}
+                        </p>
+                      </div>
+                      {(page.isHome ? '' : page.path) === activePage && (
+                        <span className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0" />
+                      )}
+                    </button>
+                  ))}
+                  <p className="text-[10px] text-gray-400 leading-relaxed pt-1">
+                    Vistas detectadas desde los links del Navbar. Para agregar más, edita el bloque Navegación.
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
           <div
             className="flex-1 overflow-y-auto pb-2"
             style={{ scrollbarWidth: 'thin', scrollbarColor: '#e5e7eb transparent' }}
@@ -810,6 +942,7 @@ export function LandingEditor({ landing }: Props) {
               })
             })()}
           </div>
+          )}
 
           {/* Bottom actions */}
           <div
@@ -873,20 +1006,20 @@ export function LandingEditor({ landing }: Props) {
               onDragEnd={onDragEnd}
             >
               <SortableContext
-                items={blocks.map((b) => b.id)}
+                items={canvasBlocks.map((b) => b.id)}
                 strategy={verticalListSortingStrategy}
               >
                 {/* White page surface */}
                 <div className="bg-white shadow-xl mx-auto w-full max-w-[1100px] min-h-screen my-0">
-                  {blocks.length === 0 && <EmptyCanvas onAdd={addBlock} />}
+                  {canvasBlocks.length === 0 && <EmptyCanvas onAdd={addBlock} />}
 
-                  {blocks.map((block) => (
+                  {canvasBlocks.map((block) => (
                     <SortableBlock
                       key={block.id}
                       block={block}
                       selected={selectedId === block.id}
                       isDragging={dragActiveId === block.id}
-                      meta={BLOCK_META[block.type]}
+                      meta={BLOCK_META[block.type] ?? BLOCK_META['hero']}
                       onClick={() => setSelectedId((prev) => (prev === block.id ? null : block.id))}
                       onRemove={() => removeBlock(block.id)}
                       onDuplicate={() => duplicateBlock(block.id)}
@@ -1074,6 +1207,38 @@ export function LandingEditor({ landing }: Props) {
                         content={selectedBlock.content}
                         onChange={updateSelected}
                       />
+                    )}
+                    {/* Vista selector — shown for non-global blocks when multi-page is active */}
+                    {hasMultiPage && !GLOBAL_TYPES.has(selectedBlock.type) && (
+                      <div className="mt-4 pt-4 border-t border-gray-100">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                          Vista asignada
+                        </p>
+                        <select
+                          value={(selectedBlock as Block & { pageId?: string }).pageId ?? ''}
+                          onChange={(e) => {
+                            const pageId = e.target.value || undefined
+                            setBlocks((prev) =>
+                              prev.map((b) =>
+                                b.id === selectedId ? ({ ...b, pageId } as Block) : b
+                              )
+                            )
+                          }}
+                          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-200 bg-white"
+                        >
+                          <option value="">🌐 Global (todas las vistas)</option>
+                          {pages.map((p) => (
+                            <option key={p.id} value={p.isHome ? '' : p.path}>
+                              {p.icon ?? '📄'} {p.label}
+                            </option>
+                          ))}
+                        </select>
+                        <p className="text-[10px] text-gray-400 mt-1">
+                          {!(selectedBlock as Block & { pageId?: string }).pageId
+                            ? 'Este bloque aparece en todas las vistas'
+                            : `Solo aparece en la vista "${pages.find(p => (p.isHome ? '' : p.path) === (selectedBlock as Block & { pageId?: string }).pageId)?.label ?? ''}"`}
+                        </p>
+                      </div>
                     )}
                   </>
                 ) : (

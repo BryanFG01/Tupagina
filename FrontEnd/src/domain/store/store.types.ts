@@ -7,6 +7,7 @@ export type Product = {
   description: string | null
   imageUrl: string | null
   price: number         // en centavos
+  currency: string      // "USD", "EUR", etc.
   comparePrice: number | null  // precio original tachado (oferta)
   stock: number         // -1 = ilimitado
   active: boolean
@@ -14,6 +15,7 @@ export type Product = {
   badge: string | null       // "Nuevo" | "Oferta" | "Popular" | custom
   badgeShape: string | null  // "pill" | "square" | "starburst"
   badgeSize: string | null   // "sm" | "md" | "lg"
+  badgeColor: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -23,12 +25,14 @@ export type CreateProductInput = {
   description?: string
   imageUrl?: string
   price: number         // en centavos
+  currency?: string
   comparePrice?: number // precio original tachado
   stock?: number
   category?: string
   badge?: string
   badgeShape?: string
   badgeSize?: string
+  badgeColor?: string
 }
 
 export type UpdateProductInput = Partial<CreateProductInput> & { active?: boolean }

@@ -3,23 +3,24 @@ import type { Product, CreateProductInput, UpdateProductInput } from '@/domain/s
 
 // Encode badge text + shape + size into a single string field
 // Format: plain text (backward compat) or JSON {"t":"text","s":"shape","z":"size"}
-function encodeBadge(text?: string, shape?: string, size?: string): string | null {
-  if (!text) return null
+function encodeBadge(text?: string, shape?: string, size?: string, color?: string, currency?: string): string {
+  const t = text || ''
   const s = shape ?? 'pill'
   const z = size ?? 'md'
-  if (s === 'pill' && z === 'md') return text  // default values → plain text (backward compat)
-  return JSON.stringify({ t: text, s, z })
+  const cur = currency ?? 'USD'
+  if (s === 'pill' && z === 'md' && !color && cur === 'USD' && t) return t
+  return JSON.stringify({ t, s, z, c: color, cur })
 }
 
-function parseBadgeField(raw: string | null): { badge: string | null; badgeShape: string | null; badgeSize: string | null } {
-  if (!raw) return { badge: null, badgeShape: null, badgeSize: null }
+function parseBadgeField(raw: string | null): { badge: string | null; badgeShape: string | null; badgeSize: string | null; badgeColor: string | null; currency: string } {
+  if (!raw) return { badge: null, badgeShape: null, badgeSize: null, badgeColor: null, currency: 'USD' }
   try {
-    const obj = JSON.parse(raw) as { t?: string; s?: string; z?: string }
-    if (typeof obj.t === 'string') {
-      return { badge: obj.t, badgeShape: obj.s ?? 'pill', badgeSize: obj.z ?? 'md' }
+    const obj = JSON.parse(raw) as { t?: string; s?: string; z?: string; c?: string; cur?: string }
+    if (typeof obj === 'object' && obj !== null) {
+      return { badge: obj.t || null, badgeShape: obj.s ?? 'pill', badgeSize: obj.z ?? 'md', badgeColor: obj.c ?? null, currency: obj.cur ?? 'USD' }
     }
   } catch {}
-  return { badge: raw, badgeShape: 'pill', badgeSize: 'md' }
+  return { badge: raw, badgeShape: 'pill', badgeSize: 'md', badgeColor: null, currency: 'USD' }
 }
 
 function map(raw: {
@@ -28,8 +29,8 @@ function map(raw: {
   stock: number; active: boolean; category: string | null; badge: string | null
   createdAt: Date; updatedAt: Date
 }): Product {
-  const { badge, badgeShape, badgeSize } = parseBadgeField(raw.badge)
-  return { ...raw, badge, badgeShape, badgeSize }
+  const { badge, badgeShape, badgeSize, badgeColor, currency } = parseBadgeField(raw.badge)
+  return { ...raw, badge, badgeShape, badgeSize, badgeColor, currency }
 }
 
 export async function getProductsByLanding(landingId: string): Promise<Product[]> {
@@ -64,16 +65,16 @@ export async function createProduct(landingId: string, input: CreateProductInput
       comparePrice: input.comparePrice ?? null,
       stock:        input.stock ?? -1,
       category:     input.category || null,
-      badge:        encodeBadge(input.badge, input.badgeShape, input.badgeSize),
+      badge:        encodeBadge(input.badge, input.badgeShape, input.badgeSize, input.badgeColor, input.currency),
     },
   })
   return map(row)
 }
 
 export async function updateProduct(id: string, input: UpdateProductInput): Promise<Product> {
-  // If badge is being updated, encode shape+size into it
-  const encodedBadge = input.badge !== undefined
-    ? encodeBadge(input.badge, input.badgeShape, input.badgeSize)
+  // If badge is being updated, encode shape+size+color+currency into it
+  const encodedBadge = (input.badge !== undefined || input.badgeShape !== undefined || input.badgeSize !== undefined || input.badgeColor !== undefined || input.currency !== undefined)
+    ? encodeBadge(input.badge, input.badgeShape, input.badgeSize, input.badgeColor, input.currency)
     : undefined
 
   const row = await prisma.product.update({

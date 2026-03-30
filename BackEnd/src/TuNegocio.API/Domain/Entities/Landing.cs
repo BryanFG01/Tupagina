@@ -16,4 +16,12 @@ public class Landing
     // Navigation
     public User User { get; set; } = null!;
     public ICollection<Product> Products { get; set; } = new List<Product>();
+
+    // New relations based on 100% dynamics analysis
+    public ICollection<PaymentIntegration> PaymentIntegrations { get; set; } = new List<PaymentIntegration>();
+    public ICollection<MediaAsset> MediaAssets { get; set; } = new List<MediaAsset>();
+    public ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
+    public ICollection<ShippingZone> ShippingZones { get; set; } = new List<ShippingZone>();
+    public ICollection<CustomDomain> CustomDomains { get; set; } = new List<CustomDomain>();
+    public SeoMetadata? SeoMetadata { get; set; }
 }

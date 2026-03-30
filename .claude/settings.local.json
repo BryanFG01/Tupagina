@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/pcc/Desktop/Tunegocio/FrontEnd -type f \\\\\\(-name schema.prisma -o -name seed.* -o -name *.sql \\\\\\))",
+      "Bash(find /c/Users/pcc/Desktop/Tunegocio/FrontEnd/prisma/migrations -type f -name *.sql)"
+    ]
+  }
+}

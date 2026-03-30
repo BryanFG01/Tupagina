@@ -17,7 +17,9 @@ function _starburstPoints(cx: number, cy: number, outerR: number, innerR: number
   for (let i = 0; i < numSpikes * 2; i++) {
     const angle = (Math.PI * i) / numSpikes - Math.PI / 2
     const r = i % 2 === 0 ? outerR : innerR
-    pts.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`)
+    const x = Number((cx + r * Math.cos(angle)).toFixed(4))
+    const y = Number((cy + r * Math.sin(angle)).toFixed(4))
+    pts.push(`${x},${y}`)
   }
   return pts.join(' ')
 }

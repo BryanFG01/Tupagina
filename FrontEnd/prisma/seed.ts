@@ -50,11 +50,11 @@ async function main() {
               {
                 id: 'n3', label: 'Categorías', url: '#', hasDropdown: true,
                 dropdown: [
-                  { id: 'dd1', label: '🍎 Frutas y Verduras', url: '#' },
-                  { id: 'dd2', label: '🥩 Carnes y Aves',     url: '#' },
-                  { id: 'dd3', label: '🥛 Lácteos',           url: '#' },
-                  { id: 'dd4', label: '🍞 Panadería',         url: '#' },
-                  { id: 'dd5', label: '🧴 Limpieza',          url: '#' },
+                  { id: 'dd1', label: '🍎 Frutas y Verduras', url: '/p/mercado-frutas' },
+                  { id: 'dd2', label: '🥩 Carnes y Aves',     url: '/p/mercado-carnes' },
+                  { id: 'dd3', label: '🥛 Lácteos',           url: '/p/mercado-lacteos' },
+                  { id: 'dd4', label: '🍞 Panadería',         url: '/p/mercado-panaderia' },
+                  { id: 'dd5', label: '🧃 Bebidas',           url: '/p/mercado-bebidas' },
                 ],
               },
               { id: 'n4', label: 'Nosotros', url: '#nosotros', hasDropdown: false, dropdown: [] },
@@ -81,10 +81,10 @@ async function main() {
             announcement:      '🚚 Envío gratis en pedidos mayores a $500  ·  ⚡ Entrega express en 60 min  ·  🎁 10% OFF tu primer pedido con código BIENVENIDO',
             navDropdownStyle:  'floating',
             navItems: [
-              { id: 'nav1', label: 'Frutas', url: '#', dropdown: [] },
-              { id: 'nav2', label: 'Carnes',  url: '#', dropdown: [] },
-              { id: 'nav3', label: 'Lácteos', url: '#', dropdown: [] },
-              { id: 'nav4', label: 'Bebidas', url: '#', dropdown: [] },
+              { id: 'nav1', label: 'Frutas',   url: '/p/mercado-frutas',     dropdown: [] },
+              { id: 'nav2', label: 'Carnes',   url: '/p/mercado-carnes',     dropdown: [] },
+              { id: 'nav3', label: 'Lácteos',  url: '/p/mercado-lacteos',    dropdown: [] },
+              { id: 'nav4', label: 'Bebidas',  url: '/p/mercado-bebidas',    dropdown: [] },
             ],
             navAlign: 'center',
           },
@@ -120,24 +120,24 @@ async function main() {
           },
         },
 
-        // ── 4. Icons Ticker — categorías ──────────────────────────────────
+        // ── 4. Icons Ticker — categorías (con links a mercados) ───────────
         {
           id: 'b-icons', type: 'icons-ticker', order: 3,
           content: {
             title: 'Compra por categoría',
             items: [
-              { id: 'ic1',  icon: '🍎', iconType: 'emoji', label: 'Frutas',      url: '#' },
-              { id: 'ic2',  icon: '🥦', iconType: 'emoji', label: 'Verduras',    url: '#' },
-              { id: 'ic3',  icon: '🥩', iconType: 'emoji', label: 'Carnes',      url: '#' },
-              { id: 'ic4',  icon: '🐟', iconType: 'emoji', label: 'Pescados',    url: '#' },
-              { id: 'ic5',  icon: '🥛', iconType: 'emoji', label: 'Lácteos',     url: '#' },
-              { id: 'ic6',  icon: '🥚', iconType: 'emoji', label: 'Huevos',      url: '#' },
-              { id: 'ic7',  icon: '🍞', iconType: 'emoji', label: 'Panadería',   url: '#' },
-              { id: 'ic8',  icon: '🧃', iconType: 'emoji', label: 'Bebidas',     url: '#' },
-              { id: 'ic9',  icon: '🍫', iconType: 'emoji', label: 'Snacks',      url: '#' },
-              { id: 'ic10', icon: '🧴', iconType: 'emoji', label: 'Limpieza',    url: '#' },
-              { id: 'ic11', icon: '🌿', iconType: 'emoji', label: 'Orgánicos',   url: '#' },
-              { id: 'ic12', icon: '🐾', iconType: 'emoji', label: 'Mascotas',    url: '#' },
+              { id: 'ic1',  icon: '🍎', iconType: 'emoji', label: 'Frutas',      url: '/p/mercado-frutas' },
+              { id: 'ic2',  icon: '🥦', iconType: 'emoji', label: 'Verduras',    url: '/p/mercado-frutas' },
+              { id: 'ic3',  icon: '🥩', iconType: 'emoji', label: 'Carnes',      url: '/p/mercado-carnes' },
+              { id: 'ic4',  icon: '🐟', iconType: 'emoji', label: 'Pescados',    url: '/p/mercado-carnes' },
+              { id: 'ic5',  icon: '🥛', iconType: 'emoji', label: 'Lácteos',     url: '/p/mercado-lacteos' },
+              { id: 'ic6',  icon: '🥚', iconType: 'emoji', label: 'Huevos',      url: '/p/mercado-lacteos' },
+              { id: 'ic7',  icon: '🍞', iconType: 'emoji', label: 'Panadería',   url: '/p/mercado-panaderia' },
+              { id: 'ic8',  icon: '🧃', iconType: 'emoji', label: 'Bebidas',     url: '/p/mercado-bebidas' },
+              { id: 'ic9',  icon: '🍫', iconType: 'emoji', label: 'Snacks',      url: '/p/freshcart-demo' },
+              { id: 'ic10', icon: '🧴', iconType: 'emoji', label: 'Limpieza',    url: '/p/freshcart-demo' },
+              { id: 'ic11', icon: '🌿', iconType: 'emoji', label: 'Orgánicos',   url: '/p/freshcart-demo' },
+              { id: 'ic12', icon: '🐾', iconType: 'emoji', label: 'Mascotas',    url: '/p/freshcart-demo' },
             ],
             speed:           'normal',
             direction:       'left',
@@ -236,7 +236,7 @@ async function main() {
                 url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=900&q=80',
                 alt: 'Sección de frutas y verduras frescas',
                 ctaText: 'Ver Frutas y Verduras',
-                ctaUrl:  '#',
+                ctaUrl:  '/p/mercado-frutas',
               },
               {
                 id: 'g2',
@@ -402,12 +402,13 @@ async function main() {
             tagline:   'Tu supermercado online. Fresco, rápido y al mejor precio.',
             columns: [
               {
-                title: 'Empresa',
+                title: 'Mercados',
                 links: [
-                  { label: 'Nosotros',          url: '#' },
-                  { label: 'Blog',              url: '#' },
-                  { label: 'Trabaja con nosotros', url: '#' },
-                  { label: 'Prensa',            url: '#' },
+                  { label: '🍎 Frutas y Verduras', url: '/p/mercado-frutas' },
+                  { label: '🥩 Carnes y Aves',     url: '/p/mercado-carnes' },
+                  { label: '🥛 Lácteos',           url: '/p/mercado-lacteos' },
+                  { label: '🍞 Panadería',         url: '/p/mercado-panaderia' },
+                  { label: '🧃 Bebidas',           url: '/p/mercado-bebidas' },
                 ],
               },
               {
@@ -499,11 +500,723 @@ async function main() {
   }
 
   console.log(`✅ ${products.length} productos creados para FreshCart`)
-  console.log('\n─────────────────────────────────────────')
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ─── MERCADOS DE CATEGORÍA ─────────────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ── Bloque de navegación compartido para mercados ─────────────────────────
+  const marketNavbar = (active: string) => ({
+    id: 'b-navbar', type: 'navbar', order: 0,
+    content: {
+      brandName:       'FreshCart',
+      brandLogo:       '',
+      sticky:          true,
+      transparent:     false,
+      textColor:       'dark',
+      backgroundColor: '#ffffff',
+      dropdownStyle:   'floating',
+      showSearch:      false,
+      ctaText:         '← Volver al súper',
+      ctaUrl:          '/p/freshcart-demo',
+      items: [
+        { id: 'mn1', label: '🍎 Frutas',    url: '/p/mercado-frutas',     hasDropdown: false, dropdown: [], active: active === 'frutas' },
+        { id: 'mn2', label: '🥩 Carnes',    url: '/p/mercado-carnes',     hasDropdown: false, dropdown: [], active: active === 'carnes' },
+        { id: 'mn3', label: '🥛 Lácteos',   url: '/p/mercado-lacteos',    hasDropdown: false, dropdown: [], active: active === 'lacteos' },
+        { id: 'mn4', label: '🍞 Panadería', url: '/p/mercado-panaderia',  hasDropdown: false, dropdown: [], active: active === 'panaderia' },
+        { id: 'mn5', label: '🧃 Bebidas',   url: '/p/mercado-bebidas',    hasDropdown: false, dropdown: [], active: active === 'bebidas' },
+      ],
+    },
+  })
+
+  const marketFloating = {
+    id: 'b-float', type: 'floating-buttons', order: 98,
+    content: {
+      buttons: [
+        { id: 'fb1', type: 'whatsapp', label: 'Pedir por WhatsApp', url: 'https://wa.me/5215512345678?text=Hola%2C%20quiero%20hacer%20un%20pedido', color: '#25D366', visible: true },
+      ],
+      position:   'bottom-right',
+      showLabels: true,
+      size:       'md',
+    },
+  }
+
+  const marketFooter = {
+    id: 'b-footer', type: 'footer', order: 99,
+    content: {
+      brandName: 'FreshCart',
+      tagline:   'Tu supermercado online. Fresco, rápido y al mejor precio.',
+      columns: [
+        {
+          title: 'Mercados',
+          links: [
+            { label: '🍎 Frutas y Verduras', url: '/p/mercado-frutas' },
+            { label: '🥩 Carnes y Aves',     url: '/p/mercado-carnes' },
+            { label: '🥛 Lácteos',           url: '/p/mercado-lacteos' },
+            { label: '🍞 Panadería',         url: '/p/mercado-panaderia' },
+            { label: '🧃 Bebidas',           url: '/p/mercado-bebidas' },
+          ],
+        },
+        {
+          title: 'FreshCart',
+          links: [
+            { label: '🏠 Inicio',           url: '/p/freshcart-demo' },
+            { label: '🛒 Ver todo',          url: '/p/freshcart-demo' },
+            { label: '📞 Contacto',          url: '/p/freshcart-demo#contacto' },
+          ],
+        },
+      ],
+      whatsappFooter: '5215512345678',
+      email:          'hola@freshcart.mx',
+      copyright:      `© ${new Date().getFullYear()} FreshCart. Todos los derechos reservados.`,
+    },
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MERCADO 1 — Frutas y Verduras
+  // ══════════════════════════════════════════════════════════════════════════
+  const landingFrutas = await prisma.landingPage.upsert({
+    where:  { slug: 'mercado-frutas' },
+    update: {},
+    create: {
+      userId:      user.id,
+      title:       'Mercado Frutas y Verduras — FreshCart',
+      slug:        'mercado-frutas',
+      description: 'Las frutas y verduras más frescas, directo al domicilio en menos de 1 hora.',
+      published:   true,
+      blocks: JSON.stringify([
+        marketNavbar('frutas'),
+
+        // Banner
+        {
+          id: 'b-banner', type: 'store-banner', order: 1,
+          content: {
+            storeName:         '🍎 Frutas y Verduras',
+            tagline:           'Del campo a tu mesa. Frescas, orgánicas y al mejor precio.',
+            ctaText:           'Ver productos',
+            ctaTarget:         '#productos',
+            backgroundColor:   '#16a34a',
+            textColor:         'light',
+            backgroundImage:   'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1600&q=80',
+            backgroundPosition: 'center',
+            overlayColor:      '#052e19',
+            overlayOpacity:    50,
+            cartButton:        'banner',
+            announcement:      '🌿 Productos orgánicos certificados  ·  🚚 Entrega en 60 min  ·  ✅ Frescura garantizada o te devolvemos tu dinero',
+            navItems: [],
+            navAlign: 'center',
+          },
+        },
+
+        // Icons categorías internas
+        {
+          id: 'b-icons-frutas', type: 'icons-ticker', order: 2,
+          content: {
+            title: 'Lo que encontrarás hoy',
+            items: [
+              { id: 'f1', icon: '🍎', iconType: 'emoji', label: 'Manzanas',   url: '' },
+              { id: 'f2', icon: '🥑', iconType: 'emoji', label: 'Aguacates',  url: '' },
+              { id: 'f3', icon: '🍓', iconType: 'emoji', label: 'Fresas',     url: '' },
+              { id: 'f4', icon: '🥦', iconType: 'emoji', label: 'Brócoli',    url: '' },
+              { id: 'f5', icon: '🌿', iconType: 'emoji', label: 'Espinacas',  url: '' },
+              { id: 'f6', icon: '🍋', iconType: 'emoji', label: 'Limones',    url: '' },
+              { id: 'f7', icon: '🍅', iconType: 'emoji', label: 'Tomates',    url: '' },
+              { id: 'f8', icon: '🥕', iconType: 'emoji', label: 'Zanahorias', url: '' },
+            ],
+            displayMode:     'row',
+            backgroundColor: '#f0fdf4',
+            cardBg:          '#dcfce7',
+            textColor:       '#14532d',
+            accentColor:     '#16a34a',
+            pauseOnHover:    true,
+            iconSize:        'sm',
+            showLabels:      true,
+            rounded:         'md',
+            gap:             'sm',
+          },
+        },
+
+        // Tienda
+        {
+          id: 'b-store', type: 'store', order: 3,
+          content: {
+            title:           'Frutas y Verduras Frescas',
+            subtitle:        'Selección del día · Cosechadas esta semana',
+            buttonText:      '🛒 Agregar',
+            columns:         3,
+            currency:        'mxn',
+            showSearch:      true,
+            showCategories:  false,
+            layout:          'grid',
+            showSort:        true,
+            showPriceFilter: false,
+            showProductCount: true,
+          },
+        },
+
+        // Stats frescos
+        {
+          id: 'b-stats', type: 'stats', order: 4,
+          content: {
+            title:    'Calidad que se nota',
+            layout:   'grid-4',
+            cardStyle: 'colored',
+            backgroundColor: '#052e19',
+            textColor:       '#ffffff',
+            accentColor:     '#4ade80',
+            animate:  true,
+            items: [
+              { id: 'sf1', value: '100%', label: 'productos frescos',     icon: '🌿', color: '#4ade80' },
+              { id: 'sf2', value: '6',    label: 'variedades de frutas',  icon: '🍎', color: '#86efac' },
+              { id: 'sf3', value: '60min',label: 'tiempo de entrega',     icon: '⚡', color: '#bbf7d0' },
+              { id: 'sf4', value: '2',    label: 'opciones orgánicas',    icon: '🌱', color: '#fde047' },
+            ],
+          },
+        },
+
+        marketFloating,
+        marketFooter,
+      ]),
+    },
+  })
+  console.log('✅ Mercado Frutas: /p/mercado-frutas')
+
+  // Productos para Mercado Frutas (mismo landing, reutilizando los de FreshCart)
+  const productosFrutas = [
+    { name: 'Manzanas Gala Orgánicas 1kg',   description: 'Manzanas frescas, crujientes y dulces. Cultivadas sin pesticidas.', imageUrl: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=400&q=80', price: 4900,  category: 'Frutas y Verduras', badge: 'Orgánico', stock: 50 },
+    { name: 'Aguacate Hass Maduro ×3',        description: 'Aguacates en punto perfecto de maduración, listos para consumir.',  imageUrl: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=400&q=80', price: 5900,  category: 'Frutas y Verduras', badge: 'Popular',  stock: 30 },
+    { name: 'Fresas Frescas 500g',            description: 'Fresas de temporada, jugosas y dulces. Perfectas para smoothies.', imageUrl: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&q=80', price: 3900,  category: 'Frutas y Verduras', badge: null,       stock: 25 },
+    { name: 'Brócoli Fresco ×2 pzas',         description: 'Brócoli verde, firme y fresco. Rico en vitaminas y fibra.',        imageUrl: 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400&q=80', price: 2900,  category: 'Frutas y Verduras', badge: null,       stock: 40 },
+    { name: 'Espinaca Baby Orgánica 200g',    description: 'Hojas tiernas y limpias, listas para ensalada o smoothies.',       imageUrl: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&q=80', price: 3500,  category: 'Frutas y Verduras', badge: 'Orgánico', stock: 20 },
+    { name: 'Limones Persa 1kg',              description: 'Limones jugosos y aromáticos. Esenciales en toda cocina mexicana.', imageUrl: 'https://images.unsplash.com/photo-1590502593747-42a996133562?w=400&q=80', price: 2500,  category: 'Frutas y Verduras', badge: null,       stock: 60 },
+  ]
+  for (const p of productosFrutas) {
+    await prisma.product.upsert({
+      where: { id: `mkt-f-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}` },
+      update: {},
+      create: {
+        id: `mkt-f-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}`,
+        landingId: landingFrutas.id,
+        name: p.name, description: p.description, imageUrl: p.imageUrl,
+        price: p.price, stock: p.stock, category: p.category, badge: p.badge ?? null, active: true,
+      },
+    })
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MERCADO 2 — Carnes y Aves
+  // ══════════════════════════════════════════════════════════════════════════
+  const landingCarnes = await prisma.landingPage.upsert({
+    where:  { slug: 'mercado-carnes' },
+    update: {},
+    create: {
+      userId:      user.id,
+      title:       'Mercado Carnes y Aves — FreshCart',
+      slug:        'mercado-carnes',
+      description: 'Cortes premium, pollo fresco y mariscos selectos. Refrigerados y entregados en tu puerta.',
+      published:   true,
+      blocks: JSON.stringify([
+        marketNavbar('carnes'),
+
+        // Banner
+        {
+          id: 'b-banner', type: 'store-banner', order: 1,
+          content: {
+            storeName:         '🥩 Carnes y Aves',
+            tagline:           'Cortes premium, madurados y frescos. Calidad de carnicería, comodidad de tu casa.',
+            ctaText:           'Ver productos',
+            ctaTarget:         '#productos',
+            backgroundColor:   '#991b1b',
+            textColor:         'light',
+            backgroundImage:   'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=1600&q=80',
+            backgroundPosition: 'center',
+            overlayColor:      '#450a0a',
+            overlayOpacity:    55,
+            cartButton:        'banner',
+            announcement:      '🥩 Cortes madurados 21 días  ·  🐟 Pescado fresco de hoy  ·  🚚 Entrega refrigerada en 60 min',
+            navItems: [],
+            navAlign: 'center',
+          },
+        },
+
+        // Icons
+        {
+          id: 'b-icons-carnes', type: 'icons-ticker', order: 2,
+          content: {
+            title: 'Nuestros cortes del día',
+            items: [
+              { id: 'c1', icon: '🍗', iconType: 'emoji', label: 'Pollo',     url: '' },
+              { id: 'c2', icon: '🥩', iconType: 'emoji', label: 'Res',       url: '' },
+              { id: 'c3', icon: '🐟', iconType: 'emoji', label: 'Salmón',    url: '' },
+              { id: 'c4', icon: '🌭', iconType: 'emoji', label: 'Embutidos', url: '' },
+              { id: 'c5', icon: '🦐', iconType: 'emoji', label: 'Mariscos',  url: '' },
+              { id: 'c6', icon: '🔥', iconType: 'emoji', label: 'Parrilla',  url: '' },
+            ],
+            displayMode:     'row',
+            backgroundColor: '#fff1f2',
+            cardBg:          '#ffe4e6',
+            textColor:       '#881337',
+            accentColor:     '#dc2626',
+            pauseOnHover:    true,
+            iconSize:        'sm',
+            showLabels:      true,
+            rounded:         'md',
+            gap:             'sm',
+          },
+        },
+
+        // Tienda
+        {
+          id: 'b-store', type: 'store', order: 3,
+          content: {
+            title:           'Carnes y Aves Frescas',
+            subtitle:        'Calidad premium · Refrigerado hasta tu puerta',
+            buttonText:      '🛒 Agregar',
+            columns:         3,
+            currency:        'mxn',
+            showSearch:      true,
+            showCategories:  false,
+            layout:          'grid',
+            showSort:        true,
+            showPriceFilter: false,
+            showProductCount: true,
+          },
+        },
+
+        // Stats
+        {
+          id: 'b-stats', type: 'stats', order: 4,
+          content: {
+            title:    'Calidad garantizada',
+            layout:   'grid-4',
+            cardStyle: 'colored',
+            backgroundColor: '#450a0a',
+            textColor:       '#ffffff',
+            accentColor:     '#fca5a5',
+            animate:  true,
+            items: [
+              { id: 'sc1', value: '21',    label: 'días de maduración',    icon: '🥩', color: '#fca5a5' },
+              { id: 'sc2', value: '3',     label: 'cortes disponibles',    icon: '🔪', color: '#fda4af' },
+              { id: 'sc3', value: '4°C',   label: 'cadena de frío',        icon: '❄️', color: '#e0f2fe' },
+              { id: 'sc4', value: '100%',  label: 'frescura certificada',  icon: '✅', color: '#bbf7d0' },
+            ],
+          },
+        },
+
+        marketFloating,
+        marketFooter,
+      ]),
+    },
+  })
+  console.log('✅ Mercado Carnes: /p/mercado-carnes')
+
+  const productosCarnes = [
+    { name: 'Pechuga de Pollo sin hueso 1kg', description: 'Pechuga fresca de pollo sin piel. Ideal para parrilla o horno.',   imageUrl: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&q=80', price: 11900, category: 'Carnes y Aves', badge: 'Nuevo',      stock: 20 },
+    { name: 'Filete de Res Premium 500g',     description: 'Corte premium refrigerado, madurado 21 días para mayor sabor.',    imageUrl: 'https://images.unsplash.com/photo-1558030006-450675393462?w=400&q=80', price: 22900, category: 'Carnes y Aves', badge: 'Premium',    stock: 15 },
+    { name: 'Salmón Atlántico 400g',          description: 'Salmón fresco importado, alto en Omega-3. Llegó hoy.',             imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&q=80', price: 18900, category: 'Carnes y Aves', badge: 'Fresco hoy', stock: 10 },
+  ]
+  for (const p of productosCarnes) {
+    await prisma.product.upsert({
+      where: { id: `mkt-c-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}` },
+      update: {},
+      create: {
+        id: `mkt-c-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}`,
+        landingId: landingCarnes.id,
+        name: p.name, description: p.description, imageUrl: p.imageUrl,
+        price: p.price, stock: p.stock, category: p.category, badge: p.badge ?? null, active: true,
+      },
+    })
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MERCADO 3 — Lácteos
+  // ══════════════════════════════════════════════════════════════════════════
+  const landingLacteos = await prisma.landingPage.upsert({
+    where:  { slug: 'mercado-lacteos' },
+    update: {},
+    create: {
+      userId:      user.id,
+      title:       'Mercado Lácteos — FreshCart',
+      slug:        'mercado-lacteos',
+      description: 'Leche, quesos, yogurt y más. Los mejores lácteos, fríos y frescos en tu puerta.',
+      published:   true,
+      blocks: JSON.stringify([
+        marketNavbar('lacteos'),
+
+        // Banner
+        {
+          id: 'b-banner', type: 'store-banner', order: 1,
+          content: {
+            storeName:         '🥛 Lácteos',
+            tagline:           'Leche, quesos y yogurt. Frescos, nutritivos y al mejor precio.',
+            ctaText:           'Ver productos',
+            ctaTarget:         '#productos',
+            backgroundColor:   '#1d4ed8',
+            textColor:         'light',
+            backgroundImage:   'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=1600&q=80',
+            backgroundPosition: 'center',
+            overlayColor:      '#1e3a5f',
+            overlayOpacity:    50,
+            cartButton:        'banner',
+            announcement:      '🥛 Leche pasteurizada garantizada  ·  🧀 Quesos artesanales  ·  🥄 Yogurt sin azúcar añadida',
+            navItems: [],
+            navAlign: 'center',
+          },
+        },
+
+        // Icons
+        {
+          id: 'b-icons-lacteos', type: 'icons-ticker', order: 2,
+          content: {
+            title: 'Categorías de lácteos',
+            items: [
+              { id: 'l1', icon: '🥛', iconType: 'emoji', label: 'Leche',    url: '' },
+              { id: 'l2', icon: '🧀', iconType: 'emoji', label: 'Quesos',   url: '' },
+              { id: 'l3', icon: '🥄', iconType: 'emoji', label: 'Yogurt',   url: '' },
+              { id: 'l4', icon: '🧈', iconType: 'emoji', label: 'Mantequilla', url: '' },
+              { id: 'l5', icon: '🍦', iconType: 'emoji', label: 'Crema',    url: '' },
+              { id: 'l6', icon: '🥚', iconType: 'emoji', label: 'Huevos',   url: '' },
+            ],
+            displayMode:     'row',
+            backgroundColor: '#eff6ff',
+            cardBg:          '#dbeafe',
+            textColor:       '#1e3a8a',
+            accentColor:     '#2563eb',
+            pauseOnHover:    true,
+            iconSize:        'sm',
+            showLabels:      true,
+            rounded:         'md',
+            gap:             'sm',
+          },
+        },
+
+        // Tienda
+        {
+          id: 'b-store', type: 'store', order: 3,
+          content: {
+            title:           'Lácteos Frescos',
+            subtitle:        'Fríos y en perfectas condiciones · Entrega refrigerada',
+            buttonText:      '🛒 Agregar',
+            columns:         3,
+            currency:        'mxn',
+            showSearch:      true,
+            showCategories:  false,
+            layout:          'grid',
+            showSort:        true,
+            showPriceFilter: false,
+            showProductCount: true,
+          },
+        },
+
+        // Stats
+        {
+          id: 'b-stats', type: 'stats', order: 4,
+          content: {
+            title:    'Nutrición que cuida a tu familia',
+            layout:   'grid-4',
+            cardStyle: 'colored',
+            backgroundColor: '#1e3a5f',
+            textColor:       '#ffffff',
+            accentColor:     '#93c5fd',
+            animate:  true,
+            items: [
+              { id: 'sl1', value: '3',     label: 'productos disponibles',  icon: '🥛', color: '#93c5fd' },
+              { id: 'sl2', value: '4°C',   label: 'cadena de frío',         icon: '❄️', color: '#e0f2fe' },
+              { id: 'sl3', value: '0g',    label: 'azúcar añadida (yogurt)',icon: '🥄', color: '#bbf7d0' },
+              { id: 'sl4', value: '100%',  label: 'pasteurizado',           icon: '✅', color: '#fde047' },
+            ],
+          },
+        },
+
+        marketFloating,
+        marketFooter,
+      ]),
+    },
+  })
+  console.log('✅ Mercado Lácteos: /p/mercado-lacteos')
+
+  const productosLacteos = [
+    { name: 'Leche Entera Lala 1L ×6',     description: 'Leche entera pasteurizada. Pack económico para toda la semana.',   imageUrl: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80', price: 8900, comparePrice: 11400, category: 'Lácteos', badge: 'Oferta',   stock: 45 },
+    { name: 'Yogurt Griego Natural 1kg',    description: 'Yogurt espeso, cremoso y alto en proteína. Sin azúcar añadida.',  imageUrl: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80', price: 7900, category: 'Lácteos', badge: 'Popular',  stock: 30 },
+    { name: 'Queso Manchego Rebanado 400g', description: 'Queso manchego suave, perfecto para sándwiches y quesadillas.',   imageUrl: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?w=400&q=80', price: 9500, category: 'Lácteos', badge: null,       stock: 25 },
+  ]
+  for (const p of productosLacteos) {
+    await prisma.product.upsert({
+      where: { id: `mkt-l-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}` },
+      update: {},
+      create: {
+        id: `mkt-l-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}`,
+        landingId: landingLacteos.id,
+        name: p.name, description: p.description, imageUrl: p.imageUrl,
+        price: p.price, comparePrice: (p as { comparePrice?: number }).comparePrice ?? null,
+        stock: p.stock, category: p.category, badge: p.badge ?? null, active: true,
+      },
+    })
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MERCADO 4 — Panadería
+  // ══════════════════════════════════════════════════════════════════════════
+  const landingPanaderia = await prisma.landingPage.upsert({
+    where:  { slug: 'mercado-panaderia' },
+    update: {},
+    create: {
+      userId:      user.id,
+      title:       'Mercado Panadería — FreshCart',
+      slug:        'mercado-panaderia',
+      description: 'Pan artesanal, croissants y más. Horneados cada mañana y entregados frescos.',
+      published:   true,
+      blocks: JSON.stringify([
+        marketNavbar('panaderia'),
+
+        // Banner
+        {
+          id: 'b-banner', type: 'store-banner', order: 1,
+          content: {
+            storeName:         '🍞 Panadería',
+            tagline:           'Horneado esta mañana. En tu mesa antes de mediodía.',
+            ctaText:           'Ver productos',
+            ctaTarget:         '#productos',
+            backgroundColor:   '#b45309',
+            textColor:         'light',
+            backgroundImage:   'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1600&q=80',
+            backgroundPosition: 'center',
+            overlayColor:      '#451a03',
+            overlayOpacity:    50,
+            cartButton:        'banner',
+            announcement:      '🍞 Horneado fresco cada mañana  ·  🥐 Croissants de mantequilla real  ·  🌾 Masa madre artesanal',
+            navItems: [],
+            navAlign: 'center',
+          },
+        },
+
+        // Icons
+        {
+          id: 'b-icons-pan', type: 'icons-ticker', order: 2,
+          content: {
+            title: 'Nuestras especialidades',
+            items: [
+              { id: 'p1', icon: '🍞', iconType: 'emoji', label: 'Pan blanco',   url: '' },
+              { id: 'p2', icon: '🥐', iconType: 'emoji', label: 'Croissants',   url: '' },
+              { id: 'p3', icon: '🥖', iconType: 'emoji', label: 'Baguette',     url: '' },
+              { id: 'p4', icon: '🧁', iconType: 'emoji', label: 'Muffins',      url: '' },
+              { id: 'p5', icon: '🍩', iconType: 'emoji', label: 'Dona',         url: '' },
+              { id: 'p6', icon: '🌾', iconType: 'emoji', label: 'Masa madre',   url: '' },
+            ],
+            displayMode:     'row',
+            backgroundColor: '#fffbeb',
+            cardBg:          '#fef3c7',
+            textColor:       '#78350f',
+            accentColor:     '#d97706',
+            pauseOnHover:    true,
+            iconSize:        'sm',
+            showLabels:      true,
+            rounded:         'md',
+            gap:             'sm',
+          },
+        },
+
+        // Tienda
+        {
+          id: 'b-store', type: 'store', order: 3,
+          content: {
+            title:           'Panadería Artesanal',
+            subtitle:        'Horneado hoy · Entrega en tu puerta antes del mediodía',
+            buttonText:      '🛒 Agregar',
+            columns:         3,
+            currency:        'mxn',
+            showSearch:      true,
+            showCategories:  false,
+            layout:          'grid',
+            showSort:        true,
+            showPriceFilter: false,
+            showProductCount: true,
+          },
+        },
+
+        // Stats
+        {
+          id: 'b-stats', type: 'stats', order: 4,
+          content: {
+            title:    'Tradición panadera',
+            layout:   'grid-4',
+            cardStyle: 'colored',
+            backgroundColor: '#451a03',
+            textColor:       '#ffffff',
+            accentColor:     '#fcd34d',
+            animate:  true,
+            items: [
+              { id: 'sp1', value: '2',    label: 'especialidades del día',  icon: '🍞', color: '#fcd34d' },
+              { id: 'sp2', value: '6am',  label: 'comienza el horneado',    icon: '🌅', color: '#fde68a' },
+              { id: 'sp3', value: '0',    label: 'conservadores añadidos',  icon: '🌾', color: '#bbf7d0' },
+              { id: 'sp4', value: '100%', label: 'mantequilla real',        icon: '🧈', color: '#fca5a5' },
+            ],
+          },
+        },
+
+        marketFloating,
+        marketFooter,
+      ]),
+    },
+  })
+  console.log('✅ Mercado Panadería: /p/mercado-panaderia')
+
+  const productosPanaderia = [
+    { name: 'Pan Artesanal de Masa Madre',   description: 'Pan horneado al momento, corteza crujiente y miga esponjosa.',   imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80', price: 6500, category: 'Panadería', badge: 'Hoy',     stock: 15 },
+    { name: 'Croissants de Mantequilla ×4', description: 'Croissants franceses hojaldrados, recién horneados cada mañana.', imageUrl: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&q=80', price: 7900, category: 'Panadería', badge: 'Popular', stock: 20 },
+  ]
+  for (const p of productosPanaderia) {
+    await prisma.product.upsert({
+      where: { id: `mkt-p-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}` },
+      update: {},
+      create: {
+        id: `mkt-p-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}`,
+        landingId: landingPanaderia.id,
+        name: p.name, description: p.description, imageUrl: p.imageUrl,
+        price: p.price, stock: p.stock, category: p.category, badge: p.badge ?? null, active: true,
+      },
+    })
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MERCADO 5 — Bebidas
+  // ══════════════════════════════════════════════════════════════════════════
+  const landingBebidas = await prisma.landingPage.upsert({
+    where:  { slug: 'mercado-bebidas' },
+    update: {},
+    create: {
+      userId:      user.id,
+      title:       'Mercado Bebidas — FreshCart',
+      slug:        'mercado-bebidas',
+      description: 'Agua, jugos, café y más. Todo lo que necesitas tomar, frío o caliente, en tu puerta.',
+      published:   true,
+      blocks: JSON.stringify([
+        marketNavbar('bebidas'),
+
+        // Banner
+        {
+          id: 'b-banner', type: 'store-banner', order: 1,
+          content: {
+            storeName:         '🧃 Bebidas',
+            tagline:           'Agua, jugos y café. Refréscate sin salir de casa.',
+            ctaText:           'Ver productos',
+            ctaTarget:         '#productos',
+            backgroundColor:   '#6d28d9',
+            textColor:         'light',
+            backgroundImage:   'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=1600&q=80',
+            backgroundPosition: 'center',
+            overlayColor:      '#2e1065',
+            overlayOpacity:    50,
+            cartButton:        'banner',
+            announcement:      '💧 Agua sin gas y con gas  ·  ☕ Café 100% arábica  ·  🍊 Jugos naturales sin conservadores',
+            navItems: [],
+            navAlign: 'center',
+          },
+        },
+
+        // Icons
+        {
+          id: 'b-icons-bebidas', type: 'icons-ticker', order: 2,
+          content: {
+            title: 'Tu selección de bebidas',
+            items: [
+              { id: 'b1', icon: '💧', iconType: 'emoji', label: 'Agua',       url: '' },
+              { id: 'b2', icon: '☕', iconType: 'emoji', label: 'Café',       url: '' },
+              { id: 'b3', icon: '🍊', iconType: 'emoji', label: 'Jugos',      url: '' },
+              { id: 'b4', icon: '🧃', iconType: 'emoji', label: 'Néctares',   url: '' },
+              { id: 'b5', icon: '🫖', iconType: 'emoji', label: 'Tés',        url: '' },
+              { id: 'b6', icon: '🥤', iconType: 'emoji', label: 'Refrescos',  url: '' },
+            ],
+            displayMode:     'row',
+            backgroundColor: '#f5f3ff',
+            cardBg:          '#ede9fe',
+            textColor:       '#4c1d95',
+            accentColor:     '#7c3aed',
+            pauseOnHover:    true,
+            iconSize:        'sm',
+            showLabels:      true,
+            rounded:         'md',
+            gap:             'sm',
+          },
+        },
+
+        // Tienda
+        {
+          id: 'b-store', type: 'store', order: 3,
+          content: {
+            title:           'Bebidas para Toda Ocasión',
+            subtitle:        'Hidratación, energía y sabor · Entrega en 60 min',
+            buttonText:      '🛒 Agregar',
+            columns:         3,
+            currency:        'mxn',
+            showSearch:      true,
+            showCategories:  false,
+            layout:          'grid',
+            showSort:        true,
+            showPriceFilter: false,
+            showProductCount: true,
+          },
+        },
+
+        // Stats
+        {
+          id: 'b-stats', type: 'stats', order: 4,
+          content: {
+            title:    'Hidratación garantizada',
+            layout:   'grid-4',
+            cardStyle: 'colored',
+            backgroundColor: '#2e1065',
+            textColor:       '#ffffff',
+            accentColor:     '#c4b5fd',
+            animate:  true,
+            items: [
+              { id: 'sb1', value: '3',    label: 'bebidas disponibles',    icon: '🧃', color: '#c4b5fd' },
+              { id: 'sb2', value: '0',    label: 'conservadores (jugos)',  icon: '🍊', color: '#bbf7d0' },
+              { id: 'sb3', value: '100%', label: 'arábica (café)',         icon: '☕', color: '#fde68a' },
+              { id: 'sb4', value: '4°C',  label: 'bebidas frías',         icon: '❄️', color: '#e0f2fe' },
+            ],
+          },
+        },
+
+        marketFloating,
+        marketFooter,
+      ]),
+    },
+  })
+  console.log('✅ Mercado Bebidas: /p/mercado-bebidas')
+
+  const productosBebidas = [
+    { name: 'Agua Mineral Bonafont 1.5L ×6', description: 'Agua mineral natural con gas. Ligera y refrescante.',         imageUrl: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80', price: 6900, comparePrice: 8900, category: 'Bebidas', badge: 'Oferta',     stock: 50 },
+    { name: 'Café Colombiano Molido 500g',    description: 'Tostado medio, notas a chocolate y caramelo. 100% arábica.', imageUrl: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&q=80', price: 18900, category: 'Bebidas', badge: 'Premium',    stock: 20 },
+    { name: 'Jugo de Naranja Natural 1L',     description: 'Exprimido al momento. Sin conservadores ni azúcar añadida.', imageUrl: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&q=80', price: 4900, category: 'Bebidas', badge: 'Fresco hoy', stock: 18 },
+  ]
+  for (const p of productosBebidas) {
+    await prisma.product.upsert({
+      where: { id: `mkt-b-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}` },
+      update: {},
+      create: {
+        id: `mkt-b-${p.name.slice(0, 18).replace(/\s/g, '-').toLowerCase()}`,
+        landingId: landingBebidas.id,
+        name: p.name, description: p.description, imageUrl: p.imageUrl,
+        price: p.price, comparePrice: (p as { comparePrice?: number }).comparePrice ?? null,
+        stock: p.stock, category: p.category, badge: p.badge ?? null, active: true,
+      },
+    })
+  }
+
+  // ─── Resumen final ────────────────────────────────────────────────────────
+  console.log('\n─────────────────────────────────────────────────────────')
   console.log('🚀 Demo listo para presentar al cliente:')
-  console.log('   URL: /p/freshcart-demo')
+  console.log('')
+  console.log('   🏪 Tienda principal:   /p/freshcart-demo')
+  console.log('   🍎 Mercado Frutas:     /p/mercado-frutas')
+  console.log('   🥩 Mercado Carnes:     /p/mercado-carnes')
+  console.log('   🥛 Mercado Lácteos:    /p/mercado-lacteos')
+  console.log('   🍞 Mercado Panadería:  /p/mercado-panaderia')
+  console.log('   🧃 Mercado Bebidas:    /p/mercado-bebidas')
+  console.log('')
   console.log('   Login: demo@tunegocio.com / password123')
-  console.log('─────────────────────────────────────────\n')
+  console.log('─────────────────────────────────────────────────────────\n')
 }
 
 main()

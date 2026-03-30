@@ -9,8 +9,10 @@ import type { LandingPage } from '@/domain/landing/landing.types'
 import type { Product } from '@/domain/store/store.types'
 import { ProductDetailModal } from '@/components/store/ProductDetailModal'
 
-type Props = { params: Promise<{ slug: string }> }
-
+type Props = {
+  params: Promise<{ slug: string }>
+  searchParams?: Promise<{ p?: string }>
+}
 
 async function getLanding(slug: string): Promise<LandingPage | null> {
   try {
@@ -38,18 +40,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function PublicLandingPage({ params }: Props) {
+export default async function PublicLandingPage({ params, searchParams }: Props) {
   const { slug } = await params
-  const landing = await getLanding(slug)
+  const sp = searchParams ? await searchParams : {}
+  const currentPagePath = sp?.p ?? ''
 
+  const landing = await getLanding(slug)
   if (!landing) notFound()
 
-  const hasStore = landing.blocks.some(b => b.type === 'store')
-  const storeCurrency = landing.blocks.find(b => b.type === 'store')?.content?.currency ?? 'usd'
+  // ── Multi-page filtering ────────────────────────────────────────────────────
+  // Si algún bloque tiene pageId asignado, el modo multi-vista está activo.
+  // Bloques sin pageId son globales (navbar, footer, etc.) — aparecen siempre.
+  const hasMultiPage = landing.blocks.some(b => b.pageId)
+
+  const visibleBlocks = hasMultiPage
+    ? landing.blocks.filter(block => {
+        const blockPageId = block.pageId
+        if (!blockPageId) return true           // bloque global
+        return blockPageId === currentPagePath  // bloque de esta vista
+      })
+    : landing.blocks
+
+  // ── Store detection ─────────────────────────────────────────────────────────
+  const hasStore = visibleBlocks.some(b => b.type === 'store')
+  const storeCurrency = visibleBlocks.find(b => b.type === 'store')?.content?.currency ?? 'usd'
   const products = hasStore ? await getProducts(landing.id) : []
 
-  // Determinar si y dónde mostrar el carrito flotante
-  const bannerBlock = landing.blocks.find(b => b.type === 'store-banner')
+  // ── Cart button placement ───────────────────────────────────────────────────
+  const bannerBlock = visibleBlocks.find(b => b.type === 'store-banner')
   const bannerCartPlacement = bannerBlock?.type === 'store-banner' ? bannerBlock.content.cartButton : null
   const floatingCartPos = (
     bannerCartPlacement === 'floating-br' ? 'floating-br' :
@@ -58,17 +76,14 @@ export default async function PublicLandingPage({ params }: Props) {
     bannerCartPlacement === 'floating-tl' ? 'floating-tl' : null
   ) as 'floating-br' | 'floating-bl' | 'floating-tr' | 'floating-tl' | null
 
-  // Mostrar carrito flotante solo si: hay tienda + (no hay banner, o banner tiene opción floating)
-  const showFloatingCart = hasStore && (
-    !bannerBlock || floatingCartPos !== null
-  )
+  const showFloatingCart = hasStore && (!bannerBlock || floatingCartPos !== null)
 
-  // Solo se permite un spinner por landing — se usa el primero que aparezca
+  // ── Render ──────────────────────────────────────────────────────────────────
   let spinnerRendered = false
 
   const content = (
     <main className="min-h-screen bg-white">
-      {landing.blocks.map((block) => {
+      {visibleBlocks.map((block) => {
         if (block.type === 'loading-spinner') {
           if (spinnerRendered) return null
           spinnerRendered = true
@@ -88,7 +103,6 @@ export default async function PublicLandingPage({ params }: Props) {
   if (hasStore) {
     return (
       <StoreProvider initialProducts={products} landingId={landing.id}>
-        {/* Modal de detalle de producto — al nivel de página para evitar conflictos de z-index */}
         <ProductDetailModal currency={storeCurrency as string} />
         {content}
       </StoreProvider>

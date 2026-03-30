@@ -5,12 +5,14 @@ export const createProductSchema = z.object({
   description:  z.string().max(500).optional(),
   imageUrl:     z.string().url('URL de imagen inválida').optional().or(z.literal('')),
   price:        z.number().min(100, 'El precio mínimo es $1.00'),
+  currency:     z.string().length(3).optional().default('USD'),
   comparePrice: z.number().min(100).optional(),
   stock:        z.number().int().min(-1).optional(),
   category:     z.string().max(60).optional().or(z.literal('')),
   badge:        z.string().max(30).optional().or(z.literal('')),
   badgeShape:   z.enum(['pill', 'square', 'starburst']).optional(),
   badgeSize:    z.enum(['sm', 'md', 'lg']).optional(),
+  badgeColor:   z.string().max(20).optional(),
 })
 
 export const updateProductSchema = createProductSchema.partial().extend({

@@ -16,4 +16,7 @@ public class Product
     // Navigation
     public Landing Landing { get; set; } = null!;
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+    // New relations
+    public ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
 }

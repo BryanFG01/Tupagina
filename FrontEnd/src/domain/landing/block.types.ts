@@ -413,6 +413,20 @@ export type SpinnerContent = {
   duration: number          // ms antes de ocultar automáticamente (default: 2000)
 }
 
+// ─── Multi-vistas / Pages ─────────────────────────────────────────────────────
+
+export type LandingPageDef = {
+  id: string
+  label: string
+  path: string      // URL param: /p/slug?p=PATH (empty string = home/default)
+  icon?: string     // emoji
+  isHome?: boolean  // true for the default/main page
+}
+
+export type PageNavContent = {
+  pages: LandingPageDef[]
+}
+
 export type BlockType =
   | 'hero'
   | 'services'
@@ -432,7 +446,7 @@ export type BlockType =
   | 'icons-ticker'
   | 'loading-spinner'
 
-export type Block =
+export type Block = (
   | { id: string; type: 'hero';              order: number; content: HeroContent;             style?: BlockStyle }
   | { id: string; type: 'services';          order: number; content: ServicesContent;         style?: BlockStyle }
   | { id: string; type: 'testimonials';      order: number; content: TestimonialsContent;     style?: BlockStyle }
@@ -450,6 +464,7 @@ export type Block =
   | { id: string; type: 'features'; order: number; content: FeaturesContent; style?: BlockStyle }
   | { id: string; type: 'icons-ticker';     order: number; content: IconsTickerContent;  style?: BlockStyle }
   | { id: string; type: 'loading-spinner'; order: number; content: SpinnerContent;      style?: BlockStyle }
+) & { pageId?: string }
 
 // Defaults por tipo de bloque para cuando se agrega uno nuevo
 export const BLOCK_DEFAULTS: Record<BlockType, Block['content']> = {
